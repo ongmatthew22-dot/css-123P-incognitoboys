@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-Between: Trophy Masters</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Main Menu Screen -->
+        <div class="main-menu" id="mainMenu">
+            <h1 class="game-title">IN-BETWEEN</h1>
+            <h2 class="game-subtitle">Trophy Masters</h2>
+            <div class="menu-buttons">
+                <button class="menu-button" onclick="showLuckSelect()">PLAY</button>
+                <button class="menu-button" onclick="showLeaderboard()">LEADERBOARD</button>
+                <button class="menu-button" onclick="showSettings()">SETTINGS</button>
+            </div>
+        </div>
+
+        <!-- Luck Selection Screen -->
+        <div class="luck-select" id="luckSelect">
+            <h2>Choose Your Luck</h2>
+            <div class="luck-options">
+                <div class="luck-card" onclick="startGame('default')">
+                    <h3>🎲 Default Luck</h3>
+                    <p>Normal gameplay</p>
+                    <p class="luck-detail">Standard win rates</p>
+                </div>
+                <div class="luck-card lucky" onclick="startGame('more')">
+                    <h3>🍀 More Luck</h3>
+                    <p>Better odds!</p>
+                    <p class="luck-detail">Higher win chance</p>
+                </div>
+            </div>
+            <button class="back-button" onclick="showMainMenu()">← BACK</button>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div class="leaderboard-screen" id="leaderboardScreen">
+            <h2>🏆 Leaderboard</h2>
+            <div class="leaderboard-list" id="leaderboardList"></div>
+            <button class="back-button" onclick="showMainMenu()">← BACK</button>
+        </div>
+
+        <!-- Settings Screen -->
+        <div class="settings-screen" id="settingsScreen">
+            <h2>⚙️ Settings</h2>
+            <div class="settings-content">
+                <div class="setting-item">
+                    <label>🎵 Music Volume</label>
+                    <input type="range" id="musicVolume" min="0" max="100" value="30" oninput="updateMusicVolume(this.value)">
+                    <span id="musicValue">30%</span>
+                </div>
+                <div class="setting-item">
+                    <label>🔊 Sound Effects</label>
+                    <input type="range" id="sfxVolume" min="0" max="100" value="100" oninput="updateSFXVolume(this.value)">
+                    <span id="sfxValue">100%</span>
+                </div>
+                <div class="setting-item">
+                    <button class="menu-button" onclick="toggleMusic()">
+                        <span id="musicToggleText">🔇 Mute Music</span>
+                    </button>
+                </div>
+            </div>
+            <button class="back-button" onclick="showMainMenu()">← BACK</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <!-- In-Game Menu Button -->
+            <button class="ingame-menu-btn" onclick="showInGameMenu()">☰</button>
+
+            <!-- Top UI -->
+            <div class="top-ui">
+                <div class="stat-box">
+                    <div>💰 Pot</div>
+                    <div class="stat-value" id="potAmount">40</div>
+                </div>
+                <div class="stat-box timer-box">
+                    <div>⏰ Time</div>
+                    <div class="stat-value" id="timerDisplay">15:00</div>
+                </div>
+                <div class="stat-box">
+                    <div>🏆 Trophies</div>
+                    <div class="stat-value" id="trophies">500</div>
+                </div>
+                <div class="stat-box">
+                    <div>🎯 Round</div>
+                    <div class="stat-value" id="round">1</div>
+                </div>
+            </div>
+
+            <!-- Player Panels (repositioned) -->
+            <div class="player-panel player-bottom" id="player0Panel">
+                <div class="turn-indicator" id="player0Indicator">►</div>
+                <div class="player-info">
+                    <div class="player-name" id="player0Name">😎 You</div>
+                    <div class="player-pesos" id="player0Pesos">₱1000</div>
+                </div>
+            </div>
+
+            <div class="player-panel player-left" id="player1Panel">
+                <div class="turn-indicator" id="player1Indicator">►</div>
+                <div class="player-info">
+                    <div class="player-name" id="player1Name">👩 Maria</div>
+                    <div class="player-pesos" id="player1Pesos">₱1000</div>
+                </div>
+            </div>
+
+            <div class="player-panel player-top" id="player2Panel">
+                <div class="turn-indicator" id="player2Indicator">►</div>
+                <div class="player-info">
+                    <div class="player-name" id="player2Name">🧑 Juan</div>
+                    <div class="player-pesos" id="player2Pesos">₱1000</div>
+                </div>
+            </div>
+
+            <div class="player-panel player-right" id="player3Panel">
+                <div class="turn-indicator" id="player3Indicator">►</div>
+                <div class="player-info">
+                    <div class="player-name" id="player3Name">👨 Pedro</div>
+                    <div class="player-pesos" id="player3Pesos">₱1000</div>
+                </div>
+            </div>
+
+            <!-- Powerup Bar (repositioned) -->
+            <div class="powerup-bar" id="powerupBar"></div>
+
+            <!-- Canvas -->
+            <canvas id="gameCanvas" width="1200" height="700"></canvas>
+
+            <!-- Betting Controls (repositioned) -->
+            <div class="bet-controls" id="betControls">
+                <button class="bet-button small" onclick="adjustBet(-50)">-₱50</button>
+                <input type="number" class="bet-input" id="betAmount" value="10" min="10">
+                <button class="bet-button small" onclick="adjustBet(50)">+₱50</button>
+                <button class="bet-button primary" onclick="playerBet()">BET</button>
+                <button class="bet-button secondary" onclick="passRound()">PASS</button>
+            </div>
+
+            <!-- Confirm Panel -->
+            <div class="confirm-panel" id="confirmPanel">
+                <div class="confirm-text" id="confirmText">Bet ₱50?</div>
+                <div class="confirm-buttons">
+                    <button class="bet-button confirm" onclick="confirmBet()">✓ YES</button>
+                    <button class="bet-button cancel" onclick="cancelBet()">✗ NO</button>
+                </div>
+            </div>
+
+            <!-- Message -->
+            <div class="message" id="message"></div>
+        </div>
+
+        <!-- In-Game Menu Popup -->
+        <div class="ingame-menu-popup" id="inGameMenuPopup">
+            <div class="popup-content">
+                <h3>Menu</h3>
+                <button class="popup-button" onclick="quickSettings()">⚙️ Settings</button>
+                <button class="popup-button" onclick="exitToMainMenu()">🚪 Exit to Menu</button>
+                <button class="popup-button" onclick="closeInGameMenu()">✖ Close</button>
+            </div>
+        </div>
+
+        <!-- Quick Settings Popup -->
+        <div class="ingame-menu-popup" id="quickSettingsPopup">
+            <div class="popup-content">
+                <h3>Quick Settings</h3>
+                <div class="setting-item">
+                    <label>🎵 Music</label>
+                    <input type="range" id="quickMusicVolume" min="0" max="100" value="30" oninput="updateMusicVolume(this.value)">
+                </div>
+                <div class="setting-item">
+                    <label>🔊 SFX</label>
+                    <input type="range" id="quickSFXVolume" min="0" max="100" value="100" oninput="updateSFXVolume(this.value)">
+                </div>
+                <button class="popup-button" onclick="closeQuickSettings()">✖ Close</button>
+            </div>
+        </div>
+
+        <!-- Win Screen -->
+        <div class="win-screen" id="winScreen">
+            <div class="win-content">
+                <div class="win-emoji">🏆</div>
+                <h1>VICTORY!</h1>
+                <p>You eliminated all opponents!</p>
+                <div class="trophy-gain">+20 🏆 Trophies</div>
+                <div class="menu-buttons">
+                    <button class="menu-button" onclick="playAgainFromWin()">PLAY AGAIN</button>
+                    <button class="menu-button secondary" onclick="exitToMainMenu()">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slap Screen -->
+        <div class="slap-screen" id="slapScreen">
+            <div class="slap-content">
+                <div class="slap-emoji">😵💫</div>
+                <h1>YOU GOT SLAPPED!</h1>
+                <p>You lost all your pesos!</p>
+                <div class="trophy-loss">-10 🏆 Trophies</div>
+                <button class="play-again-button" onclick="playAgain()">PLAY AGAIN</button>
+                <button class="menu-button secondary" onclick="exitToMainMenu()">MAIN MENU</button>
+            </div>
+        </div>
+
+        <!-- Time's Up Screen -->
+        <div class="timeup-screen" id="timeUpScreen">
+            <div class="timeup-content">
+                <div class="timeup-emoji">⏰</div>
+                <h1>TIME'S UP!</h1>
+                <h2>Final Rankings</h2>
+                <div class="final-rankings" id="finalRankingsList"></div>
+                <div class="player-result">
+                    <p id="playerRankDisplay">You placed 1st!</p>
+                    <div class="trophy-result" id="trophyGainDisplay">+20 🏆</div>
+                </div>
+                <div class="menu-buttons">
+                    <button class="play-again-button" onclick="playAgainFromTimeUp()">PLAY AGAIN</button>
+                    <button class="menu-button secondary" onclick="exitToMainMenu()">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

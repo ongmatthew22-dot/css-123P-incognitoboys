@@ -1,0 +1,677 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a0033 0%, #0a0a2e 50%, #16003b 100%);
+    overflow: hidden;
+    height: 100vh;
+}
+
+.game-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+/* Main Menu */
+.main-menu, .luck-select, .leaderboard-screen, .settings-screen, .game-screen {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.main-menu.active, .luck-select.active, .leaderboard-screen.active, 
+.settings-screen.active, .game-screen.active {
+    display: flex;
+}
+
+.game-title {
+    font-size: 72px;
+    color: #FFD700;
+    text-shadow: 0 0 30px #FFD700, 0 0 60px #8B00FF;
+    margin-bottom: 10px;
+    animation: glow 2s infinite;
+}
+
+.game-subtitle {
+    font-size: 32px;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.menu-button {
+    background: linear-gradient(135deg, #8B00FF 0%, #4B0082 100%);
+    border: 3px solid #FFD700;
+    color: white;
+    padding: 20px 60px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 5px 30px rgba(138, 43, 226, 0.6);
+    text-transform: uppercase;
+    min-width: 300px;
+}
+
+.menu-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(138, 43, 226, 0.9);
+}
+
+.menu-button.secondary {
+    background: linear-gradient(135deg, #555 0%, #333 100%);
+    border-color: #888;
+}
+
+/* Luck Selection */
+.luck-options {
+    display: flex;
+    gap: 40px;
+    margin: 30px 0;
+}
+
+.luck-card {
+    background: rgba(0, 0, 0, 0.8);
+    border: 3px solid #8B00FF;
+    border-radius: 20px;
+    padding: 40px;
+    width: 250px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: white;
+}
+
+.luck-card:hover {
+    transform: scale(1.05);
+    border-color: #FFD700;
+    box-shadow: 0 10px 40px rgba(138, 43, 226, 0.9);
+}
+
+.luck-card.lucky {
+    border-color: #00FF00;
+    background: rgba(0, 100, 0, 0.3);
+}
+
+.luck-card h3 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.luck-detail {
+    color: #FFD700;
+    margin-top: 10px;
+}
+
+.back-button {
+    background: linear-gradient(135deg, #555 0%, #333 100%);
+    border: 2px solid #888;
+    color: white;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s;
+}
+
+.back-button:hover {
+    transform: translateY(-3px);
+}
+
+/* Leaderboard */
+.leaderboard-screen h2, .settings-screen h2 {
+    font-size: 48px;
+    color: #FFD700;
+    margin-bottom: 30px;
+}
+
+.leaderboard-list {
+    background: rgba(0, 0, 0, 0.8);
+    border: 3px solid #FFD700;
+    border-radius: 20px;
+    padding: 30px;
+    width: 600px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    background: rgba(138, 43, 226, 0.2);
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+}
+
+.leaderboard-item.player {
+    background: rgba(255, 215, 0, 0.3);
+    border: 2px solid #FFD700;
+}
+
+.leaderboard-rank {
+    font-weight: bold;
+    color: #FFD700;
+    margin-right: 15px;
+}
+
+/* Settings */
+.settings-content {
+    background: rgba(0, 0, 0, 0.8);
+    border: 3px solid #8B00FF;
+    border-radius: 20px;
+    padding: 40px;
+    width: 500px;
+}
+
+.setting-item {
+    margin: 25px 0;
+    color: white;
+}
+
+.setting-item label {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.setting-item input[type="range"] {
+    width: 100%;
+    height: 8px;
+    background: #444;
+    border-radius: 5px;
+    outline: none;
+}
+
+.setting-item span {
+    color: #FFD700;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* Game Screen */
+#gameCanvas {
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 0 50px rgba(138, 43, 226, 0.5);
+}
+
+.ingame-menu-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #FFD700;
+    color: #FFD700;
+    font-size: 28px;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 50;
+    transition: all 0.3s;
+}
+
+.ingame-menu-btn:hover {
+    background: rgba(255, 215, 0, 0.2);
+    transform: scale(1.1);
+}
+
+.top-ui {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 10;
+}
+
+.stat-box {
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid rgba(138, 43, 226, 0.8);
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.timer-box {
+    border-color: #FFD700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.timer-box .stat-value {
+    color: #FFD700;
+    font-size: 24px;
+    animation: timerPulse 1s infinite;
+}
+
+.stat-value {
+    color: #FFD700;
+    font-size: 22px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* Player Panels - Repositioned */
+.player-panel {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #FFD700;
+    border-radius: 12px;
+    padding: 10px 18px;
+    color: white;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.player-bottom { bottom: 100px; left: 20px; }
+.player-left { left: 20px; top: 200px; }
+.player-top { top: 100px; left: 50%; transform: translateX(-50%); }
+.player-right { right: 20px; top: 200px; }
+
+.turn-indicator {
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #FFD700;
+    font-size: 20px;
+    display: none;
+    animation: blink 1s infinite;
+}
+
+.player-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.player-pesos {
+    font-size: 18px;
+    color: #00FF00;
+    font-weight: bold;
+}
+
+/* Powerup Bar - Repositioned */
+.powerup-bar {
+    position: absolute;
+    left: 20px;
+    bottom: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.powerup-item {
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #00FF00;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+    width: 160px;
+}
+
+.powerup-item:hover {
+    transform: scale(1.05);
+    border-color: #FFD700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+.powerup-item.used {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Betting Controls - Repositioned */
+.bet-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 15px;
+    align-items: center;
+    z-index: 10;
+}
+
+.confirm-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: 3px solid #FFD700;
+}
+
+.confirm-text {
+    color: #FFD700;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.bet-button {
+    background: linear-gradient(135deg, #8B00FF 0%, #4B0082 100%);
+    border: 2px solid #FFD700;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 15px rgba(138, 43, 226, 0.5);
+    text-transform: uppercase;
+}
+
+.bet-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(138, 43, 226, 0.8);
+}
+
+.bet-button.small {
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.bet-button.primary {
+    background: linear-gradient(135deg, #00FF00 0%, #00AA00 100%);
+}
+
+.bet-button.secondary {
+    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+}
+
+.bet-button.confirm {
+    background: linear-gradient(135deg, #00FF00 0%, #00AA00 100%);
+}
+
+.bet-button.cancel {
+    background: linear-gradient(135deg, #FF0000 0%, #AA0000 100%);
+}
+
+.bet-input {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #FFD700;
+    color: #FFD700;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    width: 100px;
+    text-align: center;
+}
+
+/* Popups */
+.ingame-menu-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.ingame-menu-popup.active {
+    display: flex;
+}
+
+.popup-content {
+    background: rgba(20, 0, 40, 0.95);
+    border: 3px solid #FFD700;
+    border-radius: 20px;
+    padding: 40px;
+    min-width: 400px;
+}
+
+.popup-content h3 {
+    color: #FFD700;
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.popup-button {
+    width: 100%;
+    background: linear-gradient(135deg, #8B00FF 0%, #4B0082 100%);
+    border: 2px solid #FFD700;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: all 0.3s;
+}
+
+.popup-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(138, 43, 226, 0.8);
+}
+
+/* Win/Slap Screens */
+.win-screen, .slap-screen, .timeup-screen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.5s;
+}
+
+.win-screen.active, .slap-screen.active, .timeup-screen.active {
+    display: flex;
+}
+
+.win-content, .slap-content, .timeup-content {
+    text-align: center;
+    color: white;
+}
+
+.win-emoji, .slap-emoji, .timeup-emoji {
+    font-size: 120px;
+    margin-bottom: 20px;
+    animation: bounce 1s;
+}
+
+.win-content h1, .slap-content h1, .timeup-content h1 {
+    font-size: 56px;
+    color: #FFD700;
+    text-shadow: 0 0 30px #FFD700;
+    margin-bottom: 20px;
+}
+
+.slap-content h1 {
+    color: #FF0000;
+    text-shadow: 0 0 30px #FF0000;
+}
+
+.timeup-content h2 {
+    font-size: 32px;
+    color: white;
+    margin: 20px 0;
+}
+
+.final-rankings {
+    background: rgba(0, 0, 0, 0.8);
+    border: 3px solid #FFD700;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 500px;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    background: rgba(138, 43, 226, 0.2);
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.ranking-item.player-rank {
+    background: rgba(255, 215, 0, 0.3);
+    border: 2px solid #FFD700;
+}
+
+.rank-emoji {
+    font-size: 32px;
+    margin-right: 15px;
+}
+
+.rank-name {
+    flex: 1;
+    text-align: left;
+}
+
+.rank-pesos {
+    color: #00FF00;
+    font-weight: bold;
+}
+
+.player-result {
+    margin: 30px 0;
+}
+
+.player-result p {
+    font-size: 32px;
+    font-weight: bold;
+    color: #FFD700;
+    margin-bottom: 15px;
+}
+
+.trophy-result {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.trophy-gain, .trophy-loss {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.trophy-gain {
+    color: #00FF00;
+}
+
+.trophy-loss {
+    color: #FF0000;
+}
+
+.play-again-button {
+    background: linear-gradient(135deg, #00FF00 0%, #00AA00 100%);
+    border: 3px solid #FFD700;
+    color: white;
+    padding: 20px 50px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 10px;
+    transition: all 0.3s;
+}
+
+.play-again-button:hover {
+    transform: scale(1.1);
+}
+
+.message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    font-size: 42px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.message.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Animations */
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 30px #FFD700, 0 0 60px #8B00FF; }
+    50% { text-shadow: 0 0 50px #FFD700, 0 0 100px #8B00FF; }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+}
+
+@keyframes timerPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
